@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:applicationContext="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+    <!--    Path to the concrete file should be set using property placeholder and external property file-->
+    <applicationContext:property-placeholder location="classpath:application.properties"/>
+<!--    Services beans should be injected into the facade using constructor-based injections-->
+    <bean id="bookingFacade" class="com.rostertwo.springcorebooking.SimpleBookingFacade">
+        <constructor-arg ref="eventService"/>
+        <constructor-arg ref="userService"/>
+        <constructor-arg ref="ticketService"/>
+    </bean>
+    <bean id="eventService" class="com.rostertwo.springcorebooking.EventService"/>
+    <bean id="userService" class="com.rostertwo.springcorebooking.UserService"/>
+    <bean id="ticketService" class="com.rostertwo.springcorebooking.TicketService"/>
+<!--    DAO with storage bean should be inserted into services beans using auto wiring-->
+    <applicationContext:component-scan base-package="com.rostertwo.springcorebooking" />
+<!--    The rest of the injections should be done in a setter-based way-->
+
+    <bean id="eventDao" class="com.rostertwo.springcorebooking.EventDao">
+        <property name="events" ref="eventsHashMap"/>
+    </bean>
+    <bean id="eventsHashMap" class="java.util.HashMap"/>
+    <bean id="userDao" class="com.rostertwo.springcorebooking.UserDao" init-method="initUsersBean">
+        <property name="users" ref="usersHashMap"/>
+        <property name="storagePath" value="${users.path}"></property>
+    </bean>
+    <bean id="usersHashMap" class="java.util.HashMap"/>
+    <bean id="ticketDao" class="com.rostertwo.springcorebooking.TicketDao">
+        <property name="tickets" ref="ticketsHashMap"/>
+    </bean>
+    <bean id="ticketsHashMap" class="java.util.HashMap"/>
+    <bean id="initializationBeanPostProcessor" class="com.rostertwo.springcorebooking.InitializationBeanPostProcessor"/>
+</beans>
