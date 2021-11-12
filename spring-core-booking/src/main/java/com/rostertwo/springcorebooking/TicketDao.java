@@ -2,6 +2,7 @@ package com.rostertwo.springcorebooking;
 
 import model.Ticket;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,31 +19,22 @@ public class TicketDao{
     }
 
     public List<Ticket> getAll() {
-        return tickets
-                .values()
-                .stream()
-                .collect(Collectors.toList());
+        return new ArrayList<>(tickets.values());
     }
 
     public void save(Ticket ticket) {
-        if (ticket != null) {
-            tickets.put(ticket.getId(), ticket);
-        }
+        tickets.put(ticket.getId(), ticket);
     }
 
     public void update(Ticket ticket, long eventId, long UserId, Ticket.Category category, int place) {
-        if (ticket != null) {
-            ticket.setEventId(eventId);
-            ticket.setUserId(UserId);
-            ticket.setCategory(category);
-            ticket.setPlace(place);
-            tickets.put(ticket.getId(), ticket);
-        }
+        ticket.setEventId(eventId);
+        ticket.setUserId(UserId);
+        ticket.setCategory(category);
+        ticket.setPlace(place);
+        tickets.put(ticket.getId(), ticket);
     }
 
     public void delete(long ticketId) {
-        if (tickets.containsKey(ticketId)) {
-            tickets.remove(ticketId);
-        }
+        tickets.remove(ticketId);
     }
 }

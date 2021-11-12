@@ -6,6 +6,7 @@ import model.User;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,30 +24,21 @@ public class UserDao {
     }
 
     public List<User> getAll() {
-        return users
-                .values()
-                .stream()
-                .collect(Collectors.toList());
+        return new ArrayList<>(users.values());
     }
 
     public void save(User user) {
-        if (user != null) {
-            users.put(user.getId(), user);
-        }
+        users.put(user.getId(), user);
     }
 
     public void update(User user, String name, String email) {
-        if (user != null) {
-            user.setName(name);
-            user.setEmail(email);
-            users.put(user.getId(), user);
-        }
+        user.setName(name);
+        user.setEmail(email);
+        users.put(user.getId(), user);
     }
 
     public void delete(long userId) {
-        if (users.containsKey(userId)) {
-            users.remove(userId);
-        }
+        users.remove(userId);
     }
 
     public void setStoragePath(String storagePath) {

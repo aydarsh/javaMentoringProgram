@@ -2,6 +2,7 @@ package com.rostertwo.springcorebooking;
 
 import model.Event;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,29 +20,20 @@ public class EventDao {
     }
 
     public List<Event> getAll() {
-        return events
-                .values()
-                .stream()
-                .collect(Collectors.toList());
+        return new ArrayList<>(events.values());
     }
 
     public void save(Event event) {
-        if (event != null) {
-            events.put(event.getId(), event);
-        }
+        events.put(event.getId(), event);
     }
 
     public void update(Event event, String title, Date date) {
-        if (event != null) {
-            event.setTitle(title);
-            event.setDate(date);
-            events.put(event.getId(), event);
-        }
+        event.setTitle(title);
+        event.setDate(date);
+        events.put(event.getId(), event);
     }
 
     public void delete(long eventId) {
-        if (events.containsKey(eventId)) {
-            events.remove(eventId);
-        }
+        events.remove(eventId);
     }
 }

@@ -14,7 +14,10 @@
     </bean>
     <bean id="eventService" class="com.rostertwo.springcorebooking.EventService"/>
     <bean id="userService" class="com.rostertwo.springcorebooking.UserService"/>
-    <bean id="ticketService" class="com.rostertwo.springcorebooking.TicketService"/>
+    <bean id="ticketService" class="com.rostertwo.springcorebooking.TicketService">
+        <property name="reverseTicketByDateComparator" ref="reverseTicketByDateComparator"/>
+        <property name="sortedTicketByUserEmailComparator" ref="sortedTicketByUserEmailComparator"/>
+    </bean>
 <!--    DAO with storage bean should be inserted into services beans using auto wiring-->
     <applicationContext:component-scan base-package="com.rostertwo.springcorebooking" />
 <!--    The rest of the injections should be done in a setter-based way-->
@@ -33,4 +36,10 @@
     </bean>
     <bean id="ticketsHashMap" class="java.util.HashMap"/>
     <bean id="initializationBeanPostProcessor" class="com.rostertwo.springcorebooking.InitializationBeanPostProcessor"/>
+    <bean id="reverseTicketByDateComparator" class="com.rostertwo.springcorebooking.ReverseTicketByDateComparator">
+        <property name="eventService" ref="eventService"/>
+    </bean>
+    <bean id="sortedTicketByUserEmailComparator" class="com.rostertwo.springcorebooking.SortedTicketByUserEmailComparator">
+        <property name="userService" ref="userService"/>
+    </bean>
 </beans>

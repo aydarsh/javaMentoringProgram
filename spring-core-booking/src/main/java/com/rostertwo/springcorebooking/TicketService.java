@@ -13,15 +13,13 @@ public class TicketService {
 
     @Autowired
     private TicketDao ticketDao;
-    @Autowired
-    private EventService eventService;
-    @Autowired
-    private UserService userService;
 
-    public TicketService(TicketDao ticketDao, EventService eventService, UserService userService) {
+    private ReverseTicketByDateComparator reverseTicketByDateComparator;
+
+    private SortedTicketByUserEmailComparator sortedTicketByUserEmailComparator;
+
+    public TicketService(TicketDao ticketDao) {
         this.ticketDao = ticketDao;
-        this.eventService = eventService;
-        this.userService = userService;
     }
 
     public Ticket bookTicket(long userId, long eventId, int place, Ticket.Category category) {
@@ -38,14 +36,7 @@ public class TicketService {
      * @return List of Ticket objects.
      */
     public List<Ticket> getBookedTickets(User user, int pageSize, int pageNum) {
-        Comparator<Ticket> reverseTicketByDateComparator =
-                (t1, t2) -> eventService
-                                .getEventById(t2.getEventId())
-                                .getDate()
-                        .compareTo(
-                            eventService
-                                .getEventById(t1.getEventId())
-                                .getDate());
+
         return ticketDao
                 .getAll()
                 .stream()
@@ -63,14 +54,7 @@ public class TicketService {
      * @return List of Ticket objects.
      */
     public List<Ticket> getBookedTickets(Event event, int pageSize, int pageNum) {
-        Comparator<Ticket> sortedTicketByUserEmailComparator =
-                (t1, t2) -> userService
-                                .getUserById(t2.getUserId())
-                                .getEmail()
-                        .compareTo(
-                            userService
-                                .getUserById(t1.getUserId())
-                                .getEmail());
+
         return ticketDao
                 .getAll()
                 .stream()
@@ -82,5 +66,13 @@ public class TicketService {
     public boolean cancelTicket(long ticketId) {
         ticketDao.delete(ticketId);
         return true;
+    }
+
+    public void setReverseTicketByDateComparator(ReverseTicketByDateComparator reverseTicketByDateComparator) {
+        this.reverseTicketByDateComparator = reverseTicketByDateComparator;
+    }
+
+    public void setSortedTicketByUserEmailComparator(SortedTicketByUserEmailComparator sortedTicketByUserEmailComparator) {
+        this.sortedTicketByUserEmailComparator = sortedTicketByUserEmailComparator;
     }
 }
